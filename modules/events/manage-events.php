@@ -49,7 +49,9 @@ if(strlen($_SESSION['alogin'])=="") {
                                     <h2 class="title">Manage Events</h2>
                                 </div>
                                 <!-- /.col-md-6 -->
+                                <!-- Add this button next to the "Add Event" button in the page-title-div section -->
                                 <div class="col-md-6 text-right">
+                                    <a href="event-calendar.php" class="btn btn-info btn-sm"><i class="fa fa-calendar"></i> Calendar View</a>
                                     <a href="add-event.php" class="btn btn-primary btn-sm"><i class="fa fa-plus"></i> Add Event</a>
                                 </div>
                                 <!-- /.col-md-6 -->

@@ -198,7 +198,68 @@ require_once('includes/dashboard-data.php');
     </div>
 </div>
 
-<?php
+<!-- Add this code where you want to display events on your dashboard -->
+<div class="col-lg-6">
+    <div class="panel">
+        <div class="panel-heading">
+            <div class="panel-title clearfix">
+                <h4 class="pull-left">Upcoming Events</h4>
+                <div class="pull-right">
+                    <a href="modules/events/manage-events.php" class="btn btn-primary btn-sm">View All</a>
+                </div>
+            </div>
+        </div>
+        <div class="panel-body p-20">
+            <div class="list-group">
+                <?php 
+                // Get upcoming events
+                $sql = "SELECT * FROM tblevents WHERE eventDate >= CURDATE() ORDER BY eventDate ASC, eventTime ASC LIMIT 5";
+                $query = $dbh->prepare($sql);
+                $query->execute();
+                $events = $query->fetchAll(PDO::FETCH_OBJ);
+                
+                if($query->rowCount() > 0) {
+                    foreach($events as $event) { 
+                        // Format date
+                        $eventDate = new DateTime($event->eventDate);
+                        $formattedDate = $eventDate->format('M d, Y');
+                        
+                        // Format time
+                        $eventTime = new DateTime($event->eventTime);
+                        $formattedTime = $eventTime->format('h:i A');
+                ?>
+                <div class="list-group-item">
+                    <div class="row">
+                        <div class="col-md-2 text-center">
+                            <div style="font-size: 24px; font-weight: bold;"><?php echo $eventDate->format('d'); ?></div>
+                            <div><?php echo $eventDate->format('M'); ?></div>
+                        </div>
+                        <div class="col-md-10">
+                            <h4 class="list-group-item-heading"><?php echo htmlentities($event->eventTitle); ?></h4>
+                            <p class="list-group-item-text">
+                                <span class="label label-primary"><?php echo htmlentities($event->eventType); ?></span>
+                                <i class="fa fa-clock-o"></i> <?php echo $formattedTime; ?> | 
+                                <i class="fa fa-map-marker"></i> <?php echo htmlentities($event->eventLocation); ?>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+                <?php 
+                    }
+                } else { 
+                ?>
+                <div class="list-group-item">
+                    <p class="text-center">No upcoming events</p>
+                </div>
+                <?php } ?>
+            </div>
+            <div class="text-center m-t-10">
+                <a href="modules/events/event-calendar.php" class="btn btn-info btn-sm"><i class="fa fa-calendar"></i> Calendar View</a>
+            </div>
+        </div>
+    </div>
+</div>
+
 require_once('includes/footer.php');
 ?>
 
