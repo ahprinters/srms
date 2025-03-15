@@ -28,6 +28,39 @@ require_once('includes/dashboard-data.php');
         </div>
     </nav>
     
+    <!-- Notice Marquee Section -->
+    <div class="container-fluid mb-4">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="card-title mb-0">
+                    <i class="fas fa-bell me-2"></i> Latest Notifications
+                </h5>
+            </div>
+            <div class="card-body">
+                <marquee behavior="scroll" direction="left" onmouseover="this.stop();" onmouseout="this.start();">
+                    <?php 
+                    $sql = "SELECT noticeTitle, id FROM tblnotice ORDER BY postingDate DESC LIMIT 5";
+                    $query = $dbh->prepare($sql);
+                    $query->execute();
+                    $results = $query->fetchAll(PDO::FETCH_OBJ);
+                    $cnt = 1;
+                    if($query->rowCount() > 0) {
+                        foreach($results as $result) { 
+                            echo '<span class="text-bold"><a href="modules/notice/notice-details.php?nid='.htmlentities($result->id).'">'.htmlentities($result->noticeTitle).'</a></span>';
+                            if($cnt < $query->rowCount()) {
+                                echo ' &nbsp; | &nbsp; ';
+                            }
+                            $cnt++;
+                        }
+                    } else {
+                        echo "No notifications available";
+                    }
+                    ?>
+                </marquee>
+            </div>
+        </div>
+    </div>
+    
     <div class="container-fluid">
         <!-- Dashboard Stats -->
         <div class="row mb-4">
@@ -85,7 +118,7 @@ require_once('includes/dashboard-data.php');
             </div>
         </div>
         
-        <!-- Recent Notices -->
+        <!-- Recent Notices and Quick Links -->
         <div class="row mb-4">
             <div class="col-md-6">
                 <div class="card">
@@ -168,63 +201,4 @@ require_once('includes/dashboard-data.php');
 <?php
 require_once('includes/footer.php');
 ?>
-
-<div class="main-page">
-    <div class="container-fluid">
-        <div class="row page-title-div">
-            <div class="col-md-6">
-                <h2 class="title">Dashboard</h2>
-            </div>
-        </div>
-        <!-- /.row -->
-        <div class="row breadcrumb-div">
-            <div class="col-md-6">
-                <ul class="breadcrumb">
-                    <li><a href="dashboard.php"><i class="fa fa-home"></i> Home</a></li>
-                    <li class="active">Dashboard</li>
-                </ul>
-            </div>
-        </div>
-    </div>
-    
-    <!-- Notice Marquee Section -->
-    <div class="container-fluid">
-        <div class="row">
-            <div class="col-md-12">
-                <div class="panel">
-                    <div class="panel-heading">
-                        <div class="panel-title">
-                            <h5><i class="fa fa-bell"></i> Latest Notifications</h5>
-                        </div>
-                    </div>
-                    <div class="panel-body">
-                        <marquee behavior="scroll" direction="left" onmouseover="this.stop();" onmouseout="this.start();">
-                            <?php 
-                            $sql = "SELECT noticeTitle, id FROM tblnotice ORDER BY postingDate DESC LIMIT 5";
-                            $query = $dbh->prepare($sql);
-                            $query->execute();
-                            $results = $query->fetchAll(PDO::FETCH_OBJ);
-                            $cnt = 1;
-                            if($query->rowCount() > 0) {
-                                foreach($results as $result) { 
-                                    echo '<span class="text-bold"><a href="modules/notice/notice-details.php?nid='.htmlentities($result->id).'">'.htmlentities($result->noticeTitle).'</a></span>';
-                                    if($cnt < $query->rowCount()) {
-                                        echo ' &nbsp; | &nbsp; ';
-                                    }
-                                    $cnt++;
-                                }
-                            } else {
-                                echo "No notifications available";
-                            }
-                            ?>
-                        </marquee>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-    <!-- End Notice Marquee Section -->
-    
-    <!-- ... rest of dashboard content ... -->
-</div>
 
