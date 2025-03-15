@@ -126,9 +126,9 @@ if(strlen($_SESSION['alogin'])=="") {
                     <div class="col-12">
                         <div class="top-actions">
                             <h2><i class="fas fa-id-card me-2"></i>ID Card Attendance</h2>
-                            <a href="dashboard.php" class="btn btn-outline-primary">
-                                <i class="fas fa-arrow-left me-2"></i>Back to Dashboard
-                            </a>
+                            <div class="float-end">
+                                <a href="../../dashboard.php" class="btn btn-success btn-sm"><i class="fa fa-home"></i> Dashboard</a>
+                            </div>
                         </div>
                     </div>
                 </div>

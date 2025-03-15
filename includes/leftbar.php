@@ -51,8 +51,16 @@
                 <li class="has-children">
                     <a href="#"><i class="fa fa-bell"></i> <span>Student Attendance</span> <i class="fa fa-angle-right arrow"></i></a>
                     <ul class="child-nav">
-                        <li><a href="biometric-attendance.php"><i class="fa fa-plus"></i> <span>Biometric Attendance</span></a></li>
-                        <li><a href="id-card-attendance.php"><i class="fa fa-plus"></i> <span>ID Card Attendance</span></a></li>
+                        <!-- Look for links to attendance pages and update them to include the full path -->
+                        <!-- For example, if you have something like: -->
+                        <li><a href="biometric-attendance.php"><i class="fa fa-angle-right"></i> Biometric Attendance</a></li>
+                        
+                        <!-- Change it to: -->
+                        <li><a href="modules/attendance/biometric-attendance.php"><i class="fa fa-angle-right"></i> Biometric Attendance</a></li>
+                        
+                        <!-- Similarly for other attendance links: -->
+                        <li><a href="modules/attendance/manual-attendance.php"><i class="fa fa-angle-right"></i> Manual Attendance</a></li>
+                        <li><a href="modules/attendance/id-card-attendance.php"><i class="fa fa-angle-right"></i> ID Card Attendance</a></li>
                         <li><a href="manage-attendance.php"><i class="fa fa fa-server"></i> <span>Manage Attendance</span></a></li>
                         <li><a href="attendance-report.php"><i class="fa fa fa-server"></i> <span>Attendance Reports</span></a></li>
                     </ul>
