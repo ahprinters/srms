@@ -1,61 +1,45 @@
 <?php
 session_start();
-// Enable error reporting for debugging
-error_reporting(E_ALL);
-ini_set('display_errors', 1);
-
+error_reporting(0);
 include('../../includes/config.php');
 if(strlen($_SESSION['alogin'])=="") {   
     header("Location: ../../index.php"); 
 } else {
-    // Initialize variables to avoid undefined variable warnings
-    $msg = "";
-    $error = "";
+    // Get event ID from URL
+    if(isset($_GET['id'])) {
+        $id = $_GET['id'];
+        
+        // Fetch event details
+        $sql = "SELECT * FROM tblevents WHERE id=:id";
+        $query = $dbh->prepare($sql);
+        $query->bindParam(':id', $id, PDO::PARAM_STR);
+        $query->execute();
+        $event = $query->fetch(PDO::FETCH_OBJ);
+    }
     
     // Process form submission
-    if(isset($_POST['submit'])) {
+    if(isset($_POST['update'])) {
         $eventTitle = $_POST['eventTitle'];
         $eventDescription = $_POST['eventDescription'];
         $eventDate = $_POST['eventDate'];
         $eventTime = $_POST['eventTime'];
         $eventLocation = $_POST['eventLocation'];
         $eventType = $_POST['eventType'];
+        $id = $_POST['id'];
         
-        // Inside your try block, add this debugging line
-        try {
-            // For debugging - print the values being inserted
-            echo "<pre>Inserting: " . 
-                 "Title: $eventTitle, " . 
-                 "Description: $eventDescription, " . 
-                 "Date: $eventDate, " . 
-                 "Time: $eventTime, " . 
-                 "Location: $eventLocation, " . 
-                 "Type: $eventType, " . 
-                 "Created By: " . $_SESSION['alogin'] . 
-                 "</pre>";
-            
-            // Insert event into database - using the correct column names that match the table structure
-            $sql = "INSERT INTO tblevents(eventTitle, eventDescription, eventDate, eventTime, eventLocation, eventType, createdBy) 
-                    VALUES(:eventTitle, :eventDescription, :eventDate, :eventTime, :eventLocation, :eventType, :createdBy)";
-            $query = $dbh->prepare($sql);
-            $query->bindParam(':eventTitle', $eventTitle, PDO::PARAM_STR);
-            $query->bindParam(':eventDescription', $eventDescription, PDO::PARAM_STR);
-            $query->bindParam(':eventDate', $eventDate, PDO::PARAM_STR);
-            $query->bindParam(':eventTime', $eventTime, PDO::PARAM_STR);
-            $query->bindParam(':eventLocation', $eventLocation, PDO::PARAM_STR);
-            $query->bindParam(':eventType', $eventType, PDO::PARAM_STR);
-            $query->bindParam(':createdBy', $_SESSION['alogin'], PDO::PARAM_STR);
-            $result = $query->execute();
-            
-            if($result) {
-                $lastInsertId = $dbh->lastInsertId();
-                $msg = "Event added successfully (ID: $lastInsertId)";
-            } else {
-                $error = "Database error: " . implode(", ", $query->errorInfo());
-            }
-        } catch (PDOException $e) {
-            $error = "Database error: " . $e->getMessage();
-        }
+        // Update event in database
+        $sql = "UPDATE tblevents SET eventTitle=:eventTitle, eventDescription=:eventDescription, eventDate=:eventDate, eventTime=:eventTime, eventLocation=:eventLocation, eventType=:eventType WHERE id=:id";
+        $query = $dbh->prepare($sql);
+        $query->bindParam(':eventTitle', $eventTitle, PDO::PARAM_STR);
+        $query->bindParam(':eventDescription', $eventDescription, PDO::PARAM_STR);
+        $query->bindParam(':eventDate', $eventDate, PDO::PARAM_STR);
+        $query->bindParam(':eventTime', $eventTime, PDO::PARAM_STR);
+        $query->bindParam(':eventLocation', $eventLocation, PDO::PARAM_STR);
+        $query->bindParam(':eventType', $eventType, PDO::PARAM_STR);
+        $query->bindParam(':id', $id, PDO::PARAM_STR);
+        $query->execute();
+        
+        $msg = "Event updated successfully";
     }
 ?>
 <!DOCTYPE html>
@@ -64,7 +48,7 @@ if(strlen($_SESSION['alogin'])=="") {
         <meta charset="utf-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta name="viewport" content="width=device-width, initial-scale=1">
-        <title>SRMS Admin | Add Event</title>
+        <title>SRMS Admin | Edit Event</title>
         <link rel="stylesheet" href="../../css/bootstrap.min.css" media="screen" >
         <link rel="stylesheet" href="../../css/font-awesome.min.css" media="screen" >
         <link rel="stylesheet" href="../../css/animate-css/animate.min.css" media="screen" >
@@ -89,7 +73,7 @@ if(strlen($_SESSION['alogin'])=="") {
                         <div class="container-fluid">
                             <div class="row page-title-div">
                                 <div class="col-md-6">
-                                    <h2 class="title">Add New Event</h2>
+                                    <h2 class="title">Edit Event</h2>
                                 </div>
                             </div>
                             <!-- /.row -->
@@ -98,7 +82,7 @@ if(strlen($_SESSION['alogin'])=="") {
                                     <ul class="breadcrumb">
                                         <li><a href="../../dashboard.php"><i class="fa fa-home"></i> Home</a></li>
                                         <li><a href="manage-events.php">Events</a></li>
-                                        <li class="active">Add Event</li>
+                                        <li class="active">Edit Event</li>
                                     </ul>
                                 </div>
                             </div>
@@ -113,8 +97,9 @@ if(strlen($_SESSION['alogin'])=="") {
                                         <div class="panel">
                                             <div class="panel-heading">
                                                 <div class="panel-title clearfix">
-                                                    <h5 class="pull-left">Add New Event</h5>
+                                                    <h5 class="pull-left">Edit Event Details</h5>
                                                     <div class="pull-right">
+                                                        <a href="manage-events.php" class="btn btn-primary btn-sm"><i class="fa fa-list"></i> Manage Events</a>
                                                         <a href="../../dashboard.php" class="btn btn-success btn-sm"><i class="fa fa-home"></i> Dashboard</a>
                                                     </div>
                                                 </div>
@@ -128,48 +113,41 @@ if(strlen($_SESSION['alogin'])=="") {
                                                     <strong>Success!</strong> <?php echo htmlentities($msg); ?>
                                                 </div>
                                                 <?php } ?>
-                                                <?php if($error){ ?>
-                                                <div class="alert alert-danger alert-dismissible fade in" role="alert">
-                                                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                                                        <span aria-hidden="true">×</span>
-                                                    </button>
-                                                    <strong>Error!</strong> <?php echo htmlentities($error); ?>
-                                                </div>
-                                                <?php } ?>
                                                 
                                                 <form class="form-horizontal" method="post">
+                                                    <input type="hidden" name="id" value="<?php echo htmlentities($event->id); ?>">
                                                     <div class="form-group">
                                                         <label for="eventTitle" class="col-sm-2 control-label">Event Title</label>
                                                         <div class="col-sm-10">
-                                                            <input type="text" name="eventTitle" class="form-control" id="eventTitle" placeholder="Enter Event Title" required>
+                                                            <input type="text" name="eventTitle" class="form-control" id="eventTitle" value="<?php echo htmlentities($event->eventTitle); ?>" required>
                                                         </div>
                                                     </div>
                                                     
                                                     <div class="form-group">
                                                         <label for="eventDescription" class="col-sm-2 control-label">Description</label>
                                                         <div class="col-sm-10">
-                                                            <textarea name="eventDescription" class="form-control" id="eventDescription" rows="5" placeholder="Enter Event Description" required></textarea>
+                                                            <textarea name="eventDescription" class="form-control" id="eventDescription" rows="5" required><?php echo htmlentities($event->eventDescription); ?></textarea>
                                                         </div>
                                                     </div>
                                                     
                                                     <div class="form-group">
                                                         <label for="eventDate" class="col-sm-2 control-label">Event Date</label>
                                                         <div class="col-sm-10">
-                                                            <input type="date" name="eventDate" class="form-control" id="eventDate" required>
+                                                            <input type="date" name="eventDate" class="form-control" id="eventDate" value="<?php echo htmlentities($event->eventDate); ?>" required>
                                                         </div>
                                                     </div>
                                                     
                                                     <div class="form-group">
                                                         <label for="eventTime" class="col-sm-2 control-label">Event Time</label>
                                                         <div class="col-sm-10">
-                                                            <input type="time" name="eventTime" class="form-control" id="eventTime" required>
+                                                            <input type="time" name="eventTime" class="form-control" id="eventTime" value="<?php echo htmlentities($event->eventTime); ?>" required>
                                                         </div>
                                                     </div>
                                                     
                                                     <div class="form-group">
                                                         <label for="eventLocation" class="col-sm-2 control-label">Location</label>
                                                         <div class="col-sm-10">
-                                                            <input type="text" name="eventLocation" class="form-control" id="eventLocation" placeholder="Enter Event Location" required>
+                                                            <input type="text" name="eventLocation" class="form-control" id="eventLocation" value="<?php echo htmlentities($event->eventLocation); ?>" required>
                                                         </div>
                                                     </div>
                                                     
@@ -178,19 +156,19 @@ if(strlen($_SESSION['alogin'])=="") {
                                                         <div class="col-sm-10">
                                                             <select name="eventType" class="form-control" id="eventType" required>
                                                                 <option value="">Select Event Type</option>
-                                                                <option value="Academic">Academic</option>
-                                                                <option value="Cultural">Cultural</option>
-                                                                <option value="Sports">Sports</option>
-                                                                <option value="Holiday">Holiday</option>
-                                                                <option value="Examination">Examination</option>
-                                                                <option value="Other">Other</option>
+                                                                <option value="Academic" <?php if($event->eventType == 'Academic') echo 'selected'; ?>>Academic</option>
+                                                                <option value="Cultural" <?php if($event->eventType == 'Cultural') echo 'selected'; ?>>Cultural</option>
+                                                                <option value="Sports" <?php if($event->eventType == 'Sports') echo 'selected'; ?>>Sports</option>
+                                                                <option value="Holiday" <?php if($event->eventType == 'Holiday') echo 'selected'; ?>>Holiday</option>
+                                                                <option value="Examination" <?php if($event->eventType == 'Examination') echo 'selected'; ?>>Examination</option>
+                                                                <option value="Other" <?php if($event->eventType == 'Other') echo 'selected'; ?>>Other</option>
                                                             </select>
                                                         </div>
                                                     </div>
                                                     
                                                     <div class="form-group">
                                                         <div class="col-sm-offset-2 col-sm-10">
-                                                            <button type="submit" name="submit" class="btn btn-primary">Add Event</button>
+                                                            <button type="submit" name="update" class="btn btn-primary">Update Event</button>
                                                         </div>
                                                     </div>
                                                 </form>
