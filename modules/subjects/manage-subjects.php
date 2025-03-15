@@ -29,12 +29,13 @@ else{
             <?php include('../../includes/topbar.php');?>
             <div class="content-wrapper">
                 <div class="content-container">
-                    <?php include('../../includes/leftbar.php');?>
+                    <!-- <?php include('../../includes/leftbar.php');?> -->
                     <div class="main-page">
                         <div class="container-fluid">
                             <div class="row page-title-div">
                                 <div class="col-md-6">
                                     <h2 class="title">Manage Subjects</h2>
+                                    
                                 </div>
                             </div>
                             <div class="row breadcrumb-div">
@@ -53,8 +54,11 @@ else{
                                     <div class="col-md-12">
                                         <div class="panel">
                                             <div class="panel-heading">
-                                                <div class="panel-title">
-                                                    <h5>View Subjects Info</h5>
+                                                <div class="panel-title clearfix"> 
+                                                    <h5 class="pull-left">View Subjects Info</h5>
+                                                    <div class="pull-right">
+                                                        <?php echo backToDashboardButton(); ?>
+                                                    </div>
                                                 </div>
                                             </div>
                                             <?php if($msg){?>

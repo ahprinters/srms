@@ -54,7 +54,7 @@ else{
             <?php include('../../includes/topbar.php');?>
             <div class="content-wrapper">
                 <div class="content-container">
-                    <?php include('../../includes/leftbar.php');?>
+                    <!-- <?php include('../../includes/leftbar.php');?> -->
                     <div class="main-page">
                         <div class="container-fluid">
                             <div class="row page-title-div">
@@ -78,8 +78,9 @@ else{
                                     <div class="col-md-12">
                                         <div class="panel">
                                             <div class="panel-heading">
-                                                <div class="panel-title">
+                                                <div class="panel-title d-flex justify-content-between align-items-center">
                                                     <h5>View Students Info</h5>
+                                                    <?php echo backToDashboardButton('float-right'); ?>
                                                 </div>
                                             </div>
                                             <?php if($msg){?>

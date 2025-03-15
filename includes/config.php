@@ -6,7 +6,42 @@ define('DB_PASS', '');
 define('DB_NAME', 'srms');
 
 // Base URL configuration
-define('BASE_URL', 'http://srms.test/');
+// Define base URL for the application
+if (!defined('BASE_URL')) {
+    // Determine if we're in a subdirectory
+    $script_name = $_SERVER['SCRIPT_NAME'];
+    $base_dir = dirname($script_name);
+    
+    // If we're in the root directory
+    if ($base_dir == '/' || $base_dir == '\\') {
+        define('BASE_URL', '/');
+    } else {
+        // We're in a subdirectory
+        $base_url = str_replace('\\', '/', $base_dir);
+        if (substr($base_url, -1) != '/') {
+            $base_url .= '/';
+        }
+        define('BASE_URL', $base_url);
+    }
+}
+
+// Helper function to get dashboard URL
+function getDashboardUrl() {
+    $current_path = $_SERVER['SCRIPT_NAME'];
+    $depth = substr_count($current_path, '/') - 1;
+    
+    if ($depth <= 0) {
+        return 'dashboard.php';
+    } else {
+        return str_repeat('../', $depth) . 'dashboard.php';
+    }
+}
+
+// Helper function to create a back to dashboard button
+function backToDashboardButton($additionalClasses = '') {
+    $dashboard_url = getDashboardUrl();
+    return '<a href="' . $dashboard_url . '" class="btn btn-primary ' . $additionalClasses . '"><i class="fa fa-dashboard"></i> Back to Dashboard</a>';
+}
 
 // Establish database connection
 try {

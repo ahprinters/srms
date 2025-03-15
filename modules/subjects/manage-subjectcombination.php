@@ -64,6 +64,7 @@ else{
                                         <div class="panel">
                                             <div class="panel-heading">
                                                 <div class="panel-title">
+                                                <?php echo backToDashboardButton(); ?>
                                                     <h5>View Subject Combination Info</h5>
                                                 </div>
                                             </div>

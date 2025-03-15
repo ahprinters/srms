@@ -74,7 +74,7 @@ $error="Something went wrong. Please try again";
                 <div class="content-container">
 
 <!-- ========== LEFT SIDEBAR ========== -->
-<?php include('../../includes/leftbar.php');?>                   
+<!-- <?php include('../../includes/leftbar.php');?>                    -->
  <!-- /.left-sidebar -->
 
                     <div class="main-page">
@@ -94,15 +94,6 @@ $error="Something went wrong. Please try again";
             							<li class="active">Create Class</li>
             						</ul>
                                 </div>
-                               <!-- Back to Dashboard -->
-                        <div class="panel-body">
-                                <div class="row mb-4">
-                                    <div class="col-md-12 text-right">
-                                        <a href="../../dashboard.php" class="btn btn-secondary">
-                                            <i class="fa fa-arrow-left"></i> Back to Dashboard
-                                        </a>
-                                    </div>
-                                </div>
                             </div>
                             <!-- /.row -->
                         </div>
@@ -110,17 +101,15 @@ $error="Something went wrong. Please try again";
 
                         <section class="section">
                             <div class="container-fluid">
-
-                             
-
-                              
-
-                                <div class="row">
+                             <div class="row">
                                     <div class="col-md-8 col-md-offset-2">
                                         <div class="panel">
                                             <div class="panel-heading">
-                                                <div class="panel-title">
-                                                    <h5>Create Student Class</h5>
+                                                <div class="panel-title clearfix">
+                                                    <h5 class="pull-left">Create Student Class</h5>
+                                                    <div class="pull-right">
+                                                        <?php echo backToDashboardButton(); ?>
+                                                    </div>
                                                 </div>
                                             </div>
            <?php if($msg){?>

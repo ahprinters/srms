@@ -1,7 +1,7 @@
 <div class="left-sidebar bg-black-300 box-shadow">
     <div class="sidebar-content">
         <div class="user-info closed">
-            <img src="images/user.png" alt="User Image" class="img-circle profile-img">
+            <img src="<?php echo isset($BASE_URL) ? $BASE_URL : '../'; ?>images/user.png" alt="User Image" class="img-circle profile-img">
             <h6 class="title">Admin</h6>
             <small class="info">Administrator</small>
         </div>
@@ -11,7 +11,7 @@
                     <span class="">Main Category</span>
                 </li>
                 <li>
-                    <a href="dashboard.php"><i class="fa fa-dashboard"></i> <span>Dashboard</span></a>
+                    <a href="<?php echo isset($BASE_URL) ? $BASE_URL.'dashboard.php' : '../dashboard.php'; ?>"><i class="fa fa-dashboard"></i> <span>Dashboard</span></a>
                 </li>
 
                 <li class="has-children">

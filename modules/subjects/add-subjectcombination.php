@@ -55,6 +55,7 @@ else{
                         <div class="container-fluid">
                             <div class="row page-title-div">
                                 <div class="col-md-6">
+                                <?php echo backToDashboardButton(); ?>
                                     <h2 class="title">Add Subject Combination</h2>
                                 </div>
                             </div>

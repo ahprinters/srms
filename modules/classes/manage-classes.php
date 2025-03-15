@@ -59,17 +59,14 @@ echo "<script>window.location.href ='manage-classes.php'</script>";
             <!-- ========== WRAPPER FOR BOTH SIDEBARS & MAIN CONTENT ========== -->
             <div class="content-wrapper">
                 <div class="content-container">
-<?php include('../../includes/leftbar.php');?>  
+<!-- <?php include('../../includes/leftbar.php');?>   -->
 
                     <div class="main-page">
                         <div class="container-fluid">
                             <div class="row page-title-div">
                                 <div class="col-md-6">
                                     <h2 class="title">Manage Classes</h2>
-                                
                                 </div>
-                                
-                                <!-- /.col-md-6 text-right -->
                             </div>
                             <!-- /.row -->
                             <div class="row breadcrumb-div">
@@ -96,21 +93,19 @@ echo "<script>window.location.href ='manage-classes.php'</script>";
 
                                         <div class="panel">
                                             <div class="panel-heading">
-                                                <div class="panel-title">
-                                                    <h5>View Classes Info</h5>
-                                                </div>
-                                                <div class="text-right" style="margin-top: -30px;">
-                                                    <a href="../../dashboard.php" class="btn btn-secondary">
-                                                        <i class="fa fa-arrow-left"></i> Back to Dashboard
-                                                    </a>
+                                                <div class="panel-title clearfix">
+                                                    <h5 class="pull-left">View Classes Info</h5>
+                                                    <div class="pull-right">
+                                                        <?php echo backToDashboardButton(); ?>
+                                                    </div>
                                                 </div>
                                             </div>
-<?php if($msg){?>
-<div class="alert alert-success left-icon-alert" role="alert">
- <strong>Well done!</strong><?php echo htmlentities($msg); ?>
- </div><?php } 
-else if($error){?>
-    <div class="alert alert-danger left-icon-alert" role="alert">
+                                                <?php if($msg){?>
+                                                <div class="alert alert-success left-icon-alert" role="alert">
+                                                <strong>Well done!</strong><?php echo htmlentities($msg); ?>
+                                                </div><?php } 
+                                                else if($error){?>
+                                                    <div class="alert alert-danger left-icon-alert" role="alert">
                                             <strong>Oh snap!</strong> <?php echo htmlentities($error); ?>
                                         </div>
                                         <?php } ?>

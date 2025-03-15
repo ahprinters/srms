@@ -72,6 +72,7 @@ else{
                                     <ul class="breadcrumb">
                                         <li><a href="../../dashboard.php"><i class="fa fa-home"></i> Home</a></li>
                                         <li><a href="manage-subjectcombination.php">Subject Combination</a></li>
+                                        <?php echo backToDashboardButton(); ?>
                                         <li class="active">Update Subject Combination</li>
                                     </ul>
                                 </div>
