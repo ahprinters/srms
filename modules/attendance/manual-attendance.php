@@ -1,246 +1,273 @@
 <?php
-// Include configuration
-require_once('../../includes/config.php');
-
-// Check if user is logged in
-requireLogin();
-
-// Process form submission for attendance
-if(isset($_POST['submit'])) {
-    // Get form data
-    $classId = $_POST['class'];
-    $date = $_POST['date'];
-    $students = isset($_POST['students']) ? $_POST['students'] : [];
-    $status = isset($_POST['status']) ? $_POST['status'] : [];
-    
-    try {
-        // Begin transaction
-        $dbh->beginTransaction();
-        
-        // Loop through students and insert/update attendance
-        foreach($students as $key => $studentId) {
-            $attendanceStatus = isset($status[$key]) ? $status[$key] : 'absent';
-            
-            // Check if attendance record already exists
-            $checkSql = "SELECT id FROM tblattendance WHERE StudentId = :studentId AND AttendanceDate = :date";
-            $checkQuery = $dbh->prepare($checkSql);
-            $checkQuery->bindParam(':studentId', $studentId, PDO::PARAM_STR);
-            $checkQuery->bindParam(':date', $date, PDO::PARAM_STR);
-            $checkQuery->execute();
-            
-            if($checkQuery->rowCount() > 0) {
-                // Update existing record
-                $row = $checkQuery->fetch(PDO::FETCH_ASSOC);
-                $updateSql = "UPDATE tblattendance SET Status = :status WHERE id = :id";
-                $updateQuery = $dbh->prepare($updateSql);
-                $updateQuery->bindParam(':status', $attendanceStatus, PDO::PARAM_STR);
-                $updateQuery->bindParam(':id', $row['id'], PDO::PARAM_INT);
-                $updateQuery->execute();
-            } else {
-                // Insert new record
-                $insertSql = "INSERT INTO tblattendance (StudentId, ClassId, Status, AttendanceDate) VALUES (:studentId, :classId, :status, :date)";
-                $insertQuery = $dbh->prepare($insertSql);
-                $insertQuery->bindParam(':studentId', $studentId, PDO::PARAM_STR);
-                $insertQuery->bindParam(':classId', $classId, PDO::PARAM_INT);
-                $insertQuery->bindParam(':status', $attendanceStatus, PDO::PARAM_STR);
-                $insertQuery->bindParam(':date', $date, PDO::PARAM_STR);
-                $insertQuery->execute();
-            }
-        }
-        
-        // Commit transaction
-        $dbh->commit();
-        $msg = "Attendance recorded successfully";
-    } catch(PDOException $e) {
-        // Rollback transaction on error
-        $dbh->rollBack();
-        $error = "Error: " . $e->getMessage();
-    }
+session_start();
+error_reporting(0);
+include('../../includes/config.php');
+if(strlen($_SESSION['alogin'])=="")
+{   
+    header("Location: ../../index.php"); 
 }
-
-// Include header and sidebar
-$pageTitle = "Manual Attendance";
-require_once('../../includes/header.php');
-require_once('../../includes/sidebar.php');
+else
+{
+    // Process form submission for attendance
+    if(isset($_POST['submit'])) {
+        // Get form data
+        $classId = $_POST['class'];
+        $date = $_POST['date'];
+        $students = isset($_POST['students']) ? $_POST['students'] : [];
+        $status = isset($_POST['status']) ? $_POST['status'] : [];
+        
+        try {
+            // Begin transaction
+            $dbh->beginTransaction();
+            
+            // Loop through students and insert/update attendance
+            foreach($students as $key => $studentId) {
+                $attendanceStatus = isset($status[$key]) ? $status[$key] : 'absent';
+                
+                // Check if attendance record already exists
+                $checkSql = "SELECT id FROM tblattendance WHERE StudentId = :studentId AND AttendanceDate = :date";
+                $checkQuery = $dbh->prepare($checkSql);
+                $checkQuery->bindParam(':studentId', $studentId, PDO::PARAM_STR);
+                $checkQuery->bindParam(':date', $date, PDO::PARAM_STR);
+                $checkQuery->execute();
+                
+                if($checkQuery->rowCount() > 0) {
+                    // Update existing record
+                    $row = $checkQuery->fetch(PDO::FETCH_ASSOC);
+                    $updateSql = "UPDATE tblattendance SET Status = :status WHERE id = :id";
+                    $updateQuery = $dbh->prepare($updateSql);
+                    $updateQuery->bindParam(':status', $attendanceStatus, PDO::PARAM_STR);
+                    $updateQuery->bindParam(':id', $row['id'], PDO::PARAM_INT);
+                    $updateQuery->execute();
+                } else {
+                    // Insert new record
+                    $insertSql = "INSERT INTO tblattendance (StudentId, ClassId, Status, AttendanceDate) VALUES (:studentId, :classId, :status, :date)";
+                    $insertQuery = $dbh->prepare($insertSql);
+                    $insertQuery->bindParam(':studentId', $studentId, PDO::PARAM_STR);
+                    $insertQuery->bindParam(':classId', $classId, PDO::PARAM_INT);
+                    $insertQuery->bindParam(':status', $attendanceStatus, PDO::PARAM_STR);
+                    $insertQuery->bindParam(':date', $date, PDO::PARAM_STR);
+                    $insertQuery->execute();
+                }
+            }
+            
+            // Commit transaction
+            $dbh->commit();
+            $msg = "Attendance recorded successfully";
+        } catch(PDOException $e) {
+            // Rollback transaction on error
+            $dbh->rollBack();
+            $error = "Error: " . $e->getMessage();
+        }
+    }
 ?>
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <title>SRMS Admin | Manual Attendance</title>
+        <link rel="stylesheet" href="../../css/bootstrap.min.css" media="screen" >
+        <link rel="stylesheet" href="../../css/font-awesome.min.css" media="screen" >
+        <link rel="stylesheet" href="../../css/animate-css/animate.min.css" media="screen" >
+        <link rel="stylesheet" href="../../css/lobipanel/lobipanel.min.css" media="screen" >
+        <link rel="stylesheet" href="../../css/prism/prism.css" media="screen" >
+        <link rel="stylesheet" href="../../css/select2/select2.min.css" >
+        <link rel="stylesheet" href="../../css/main.css" media="screen" >
+        <script src="../../js/modernizr/modernizr.min.js"></script>
+    </head>
+    <body class="top-navbar-fixed">
+        <div class="main-wrapper">
 
-<div class="main-content">
-    <nav class="navbar navbar-expand-lg navbar-light mb-4">
-        <div class="container-fluid">
-            <button class="btn btn-dark d-lg-none" id="sidebarToggle">
-                <i class="fas fa-bars"></i>
-            </button>
-            <nav aria-label="breadcrumb">
-                <ol class="breadcrumb mb-0">
-                    <li class="breadcrumb-item"><a href="<?php echo BASE_URL; ?>dashboard.php">Dashboard</a></li>
-                    <li class="breadcrumb-item">Attendance</li>
-                    <li class="breadcrumb-item active" aria-current="page">Manual Attendance</li>
-                </ol>
-            </nav>
-        </div>
-    </nav>
-    
-    <div class="container-fluid">
-        <div class="row mb-4">
-            <div class="col-md-12">
-                <div class="card">
-                    <div class="card-header">
-                        <h5 class="card-title mb-0">
-                            <i class="fas fa-edit me-2"></i> Manual Attendance
-                        </h5>
-                    </div>
-                    <div class="card-body">
-                        <?php if(isset($msg)): ?>
-                            <div class="alert alert-success alert-dismissible fade show" role="alert">
-                                <strong>Success!</strong> <?php echo $msg; ?>
-                                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                            </div>
-                        <?php endif; ?>
-                        
-                        <?php if(isset($error)): ?>
-                            <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                                <strong>Error!</strong> <?php echo $error; ?>
-                                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                            </div>
-                        <?php endif; ?>
-                        
-                        <form method="post" id="attendanceForm">
-                            <div class="row mb-3">
+            <!-- ========== TOP NAVBAR ========== -->
+            <?php include('../../includes/topbar.php');?> 
+            <!-- ========== WRAPPER FOR BOTH SIDEBARS & MAIN CONTENT ========== -->
+            <div class="content-wrapper">
+                <div class="content-container">
+                    <?php include('../../includes/leftbar.php');?>
+                    <!-- /.left-sidebar -->
+
+                    <div class="main-page">
+                        <div class="container-fluid">
+                            <div class="row page-title-div">
                                 <div class="col-md-6">
-                                    <label for="class" class="form-label">Select Class</label>
-                                    <select class="form-select" id="class" name="class" required>
-                                        <option value="">Select Class</option>
-                                        <?php
-                                        $sql = "SELECT id, ClassName, Section FROM tblclasses";
-                                        $query = $dbh->prepare($sql);
-                                        $query->execute();
-                                        $classes = $query->fetchAll(PDO::FETCH_OBJ);
-                                        
-                                        if($query->rowCount() > 0) {
-                                            foreach($classes as $class) {
-                                                echo '<option value="' . $class->id . '">' . htmlentities($class->ClassName) . ' - ' . htmlentities($class->Section) . '</option>';
-                                            }
-                                        }
-                                        ?>
-                                    </select>
+                                    <h2 class="title">Manual Attendance</h2>
                                 </div>
+                            </div>
+                            <!-- /.row -->
+                            <div class="row breadcrumb-div">
                                 <div class="col-md-6">
-                                    <label for="date" class="form-label">Date</label>
-                                    <input type="date" class="form-control" id="date" name="date" value="<?php echo date('Y-m-d'); ?>" required>
+                                    <ul class="breadcrumb">
+                                        <li><a href="../../dashboard.php"><i class="fa fa-home"></i> Home</a></li>
+                                        <li>Attendance</li>
+                                        <li class="active">Manual Attendance</li>
+                                    </ul>
                                 </div>
                             </div>
-                            
-                            <div class="mb-3">
-                                <button type="button" id="fetchStudents" class="btn btn-primary">
-                                    <i class="fas fa-search me-2"></i> Fetch Students
-                                </button>
-                            </div>
-                            
-                            <div id="studentList" class="mt-4" style="display: none;">
-                                <h5 class="mb-3">Mark Attendance</h5>
-                                <div class="table-responsive">
-                                    <table class="table table-bordered table-hover">
-                                        <thead class="table-light">
-                                            <tr>
-                                                <th width="5%">#</th>
-                                                <th width="15%">Student ID</th>
-                                                <th width="30%">Student Name</th>
-                                                <th width="50%">Attendance Status</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody id="studentTableBody">
-                                            <!-- Student data will be loaded here via AJAX -->
-                                        </tbody>
-                                    </table>
+                            <!-- /.row -->
+                        </div>
+                        <!-- /.container-fluid -->
+
+                        <section class="section">
+                            <div class="container-fluid">
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <div class="panel">
+                                            <div class="panel-heading">
+                                                <div class="panel-title clearfix">
+                                                    <h5 class="pull-left">Mark Attendance</h5>
+                                                    <div class="pull-right">
+                                                        <?php echo backToDashboardButton(); ?>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="panel-body">
+                                                <?php if(isset($msg)){ ?>
+                                                <div class="alert alert-success left-icon-alert" role="alert">
+                                                    <strong>Well done!</strong> <?php echo htmlentities($msg); ?>
+                                                </div>
+                                                <?php } else if(isset($error)){ ?>
+                                                <div class="alert alert-danger left-icon-alert" role="alert">
+                                                    <strong>Oh snap!</strong> <?php echo htmlentities($error); ?>
+                                                </div>
+                                                <?php } ?>
+                                                <form class="form-horizontal" method="post">
+                                                    <div class="form-group">
+                                                        <label for="class" class="col-sm-2 control-label">Class</label>
+                                                        <div class="col-sm-10">
+                                                            <select name="class" class="form-control" id="class" required>
+                                                                <option value="">Select Class</option>
+                                                                <?php 
+                                                                $sql = "SELECT * FROM tblclasses";
+                                                                $query = $dbh->prepare($sql);
+                                                                $query->execute();
+                                                                $results = $query->fetchAll(PDO::FETCH_OBJ);
+                                                                if($query->rowCount() > 0) {
+                                                                    foreach($results as $result) { 
+                                                                ?>
+                                                                <option value="<?php echo htmlentities($result->id); ?>">
+                                                                    <?php echo htmlentities($result->ClassName); ?> - 
+                                                                    <?php echo htmlentities($result->Section); ?>
+                                                                </option>
+                                                                <?php }} ?>
+                                                            </select>
+                                                        </div>
+                                                    </div>
+                                                    
+                                                    <div class="form-group">
+                                                        <label for="date" class="col-sm-2 control-label">Date</label>
+                                                        <div class="col-sm-10">
+                                                            <input type="date" class="form-control" id="date" name="date" value="<?php echo date('Y-m-d'); ?>" required>
+                                                        </div>
+                                                    </div>
+                                                    
+                                                    <div class="form-group">
+                                                        <div class="col-sm-offset-2 col-sm-10">
+                                                            <button type="button" id="fetchStudents" class="btn btn-primary">
+                                                                <i class="fa fa-search"></i> Fetch Students
+                                                            </button>
+                                                        </div>
+                                                    </div>
+                                                    
+                                                    <div id="studentList" style="display: none;">
+                                                        <div class="col-sm-offset-2 col-sm-10">
+                                                            <div class="table-responsive">
+                                                                <table class="table table-bordered table-hover">
+                                                                    <thead>
+                                                                        <tr>
+                                                                            <th>#</th>
+                                                                            <th>Student ID</th>
+                                                                            <th>Student Name</th>
+                                                                            <th>Attendance Status</th>
+                                                                        </tr>
+                                                                    </thead>
+                                                                    <tbody id="studentTableBody">
+                                                                        <!-- Student data will be loaded here via AJAX -->
+                                                                    </tbody>
+                                                                </table>
+                                                            </div>
+                                                            
+                                                            <div class="form-group">
+                                                                <button type="submit" name="submit" class="btn btn-success">
+                                                                    <i class="fa fa-check"></i> Save Attendance
+                                                                </button>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </form>
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
-                                
-                                <div class="mt-3">
-                                    <button type="submit" name="submit" class="btn btn-success">
-                                        <i class="fas fa-save me-2"></i> Save Attendance
-                                    </button>
-                                </div>
                             </div>
-                        </form>
+                        </section>
                     </div>
                 </div>
             </div>
         </div>
-    </div>
-</div>
 
-<script>
-document.addEventListener('DOMContentLoaded', function() {
-    // Fetch students button click handler
-    document.getElementById('fetchStudents').addEventListener('click', function() {
-        const classId = document.getElementById('class').value;
-        const date = document.getElementById('date').value;
-        
-        if(!classId) {
-            alert('Please select a class');
-            return;
-        }
-        
-        if(!date) {
-            alert('Please select a date');
-            return;
-        }
-        
-        // Fetch students via AJAX
-        fetch(`<?php echo BASE_URL; ?>modules/attendance/get-students.php?class=${classId}&date=${date}`)
-            .then(response => response.json())
-            .then(data => {
-                const studentTableBody = document.getElementById('studentTableBody');
-                studentTableBody.innerHTML = '';
-                
-                if(data.length > 0) {
-                    data.forEach((student, index) => {
-                        const row = document.createElement('tr');
-                        
-                        // Create table cells
-                        row.innerHTML = `
-                            <td>${index + 1}</td>
-                            <td>${student.StudentId}
-                                <input type="hidden" name="students[]" value="${student.StudentId}">
-                            </td>
-                            <td>${student.StudentName}</td>
-                            <td>
-                                <div class="form-check form-check-inline">
-                                    <input class="form-check-input" type="radio" name="status[${index}]" id="present${index}" value="present" ${student.status === 'present' ? 'checked' : ''}>
-                                    <label class="form-check-label" for="present${index}">Present</label>
-                                </div>
-                                <div class="form-check form-check-inline">
-                                    <input class="form-check-input" type="radio" name="status[${index}]" id="absent${index}" value="absent" ${student.status === 'absent' || !student.status ? 'checked' : ''}>
-                                    <label class="form-check-label" for="absent${index}">Absent</label>
-                                </div>
-                                <div class="form-check form-check-inline">
-                                    <input class="form-check-input" type="radio" name="status[${index}]" id="late${index}" value="late" ${student.status === 'late' ? 'checked' : ''}>
-                                    <label class="form-check-label" for="late${index}">Late</label>
-                                </div>
-                                <div class="form-check form-check-inline">
-                                    <input class="form-check-input" type="radio" name="status[${index}]" id="excused${index}" value="excused" ${student.status === 'excused' ? 'checked' : ''}>
-                                    <label class="form-check-label" for="excused${index}">Excused</label>
-                                </div>
-                            </td>
-                        `;
-                        
-                        studentTableBody.appendChild(row);
-                    });
+        <!-- jQuery -->
+        <script src="../../js/jquery/jquery-2.2.4.min.js"></script>
+        <script src="../../js/bootstrap/bootstrap.min.js"></script>
+        <script src="../../js/pace/pace.min.js"></script>
+        <script src="../../js/lobipanel/lobipanel.min.js"></script>
+        <script src="../../js/iscroll/iscroll.js"></script>
+        <script src="../../js/prism/prism.js"></script>
+        <script src="../../js/select2/select2.min.js"></script>
+        <script src="../../js/main.js"></script>
+        <script>
+            $(document).ready(function() {
+                // Fetch students when button is clicked
+                $('#fetchStudents').click(function() {
+                    var classId = $('#class').val();
+                    var date = $('#date').val();
                     
-                    // Show the student list
-                    document.getElementById('studentList').style.display = 'block';
-                } else {
-                    studentTableBody.innerHTML = '<tr><td colspan="4" class="text-center">No students found in this class</td></tr>';
-                    document.getElementById('studentList').style.display = 'block';
-                }
-            })
-            .catch(error => {
-                console.error('Error:', error);
-                alert('An error occurred while fetching students');
+                    if(classId === '') {
+                        alert('Please select a class');
+                        return;
+                    }
+                    
+                    $.ajax({
+                        url: 'get-students.php',
+                        type: 'GET',
+                        data: {
+                            class: classId,
+                            date: date
+                        },
+                        dataType: 'json',
+                        success: function(data) {
+                            if(data.error) {
+                                alert(data.error);
+                                return;
+                            }
+                            
+                            var html = '';
+                            $.each(data, function(index, student) {
+                                var present = student.status === 'present' ? 'checked' : '';
+                                var absent = student.status === 'absent' || student.status === null ? 'checked' : '';
+                                
+                                html += '<tr>';
+                                html += '<td>' + (index + 1) + '</td>';
+                                html += '<td>' + student.StudentId + '<input type="hidden" name="students[]" value="' + student.StudentId + '"></td>';
+                                html += '<td>' + student.StudentName + '</td>';
+                                html += '<td>';
+                                html += '<label class="radio-inline"><input type="radio" name="status[' + index + ']" value="present" ' + present + '> Present</label> ';
+                                html += '<label class="radio-inline"><input type="radio" name="status[' + index + ']" value="absent" ' + absent + '> Absent</label>';
+                                html += '</td>';
+                                html += '</tr>';
+                            });
+                            
+                            $('#studentTableBody').html(html);
+                            $('#studentList').show();
+                        },
+                        error: function(xhr, status, error) {
+                            alert('An error occurred: ' + error);
+                        }
+                    });
+                });
             });
-    });
-});
-</script>
-
-<?php
-require_once('../../includes/footer.php');
-?>
+        </script>
+    </body>
+</html>
+<?php } ?>

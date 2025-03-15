@@ -69,7 +69,7 @@ $error="Something went wrong. Please try again";
             <div class="content-wrapper">
                 <div class="content-container">
                     <!-- ========== LEFT SIDEBAR ========== -->
-                    <?php include('../../includes/leftbar.php');?>
+                    <!-- <?php include('../../includes/leftbar.php');?> -->
                     <!-- /.left-sidebar -->
 
                     <div class="main-page">
@@ -102,15 +102,14 @@ $error="Something went wrong. Please try again";
                                     <div class="col-md-12">
                                         <div class="panel">
                                             <div class="panel-heading">
-                                                <div class="panel-title">
-                                                    <h5>Add Student Result</h5>
-                                                </div>
-                                                <div class="text-right" style="margin-top: -30px;">
-                                                    <a href="dashboard.php" class="btn btn-secondary btn-sm">
-                                                        <i class="fa fa-arrow-left"></i> Back to Dashboard
-                                                    </a>
+                                                <div class="panel-title clearfix">
+                                                    <h5 class="pull-left">Add Student Result</h5>
+                                                    <div class="pull-right">
+                                                        <?php echo backToDashboardButton(); ?>
+                                                    </div>
                                                 </div>
                                             </div>
+                                               </div>
                                             <div class="panel-body">
 <?php if($msg){?>
 <div class="alert alert-success left-icon-alert" role="alert">

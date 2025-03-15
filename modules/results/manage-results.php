@@ -51,7 +51,8 @@ if(strlen($_SESSION['alogin'])=="")
             <!-- ========== WRAPPER FOR BOTH SIDEBARS & MAIN CONTENT ========== -->
             <div class="content-wrapper">
                 <div class="content-container">
-<!-- <?php include('../../includes/leftbar.php');?>   -->
+                    <?php include('../../includes/leftbar.php');?>  
+                    <!-- /.left-sidebar -->
 
                     <div class="main-page">
                         <div class="container-fluid">
@@ -88,21 +89,23 @@ if(strlen($_SESSION['alogin'])=="")
 
                                         <div class="panel">
                                             <div class="panel-heading">
-                                                <div class="panel-title">
-                                                    <h5>Manage Results</h5>
-                                                </div>
+                                              
                                                 <div class="text-right" style="margin-top: -30px;">
-                                                    <a href="../../dashboard.php" class="btn btn-secondary btn-sm">
-                                                        <i class="fa fa-arrow-left"></i> Back to Dashboard
-                                                    </a>
+                                                    <div class="pull-right">
+                                                       
+                                                    </div>
+
                                                     <a href="../students/manage-students.php" class="btn btn-info btn-sm">
                                                         <i class="fa fa-users"></i> View All Students
                                                     </a>
                                                 </div>
                                             </div>
                                             <div class="panel-body">
-                                                <div class="panel-title">
-                                                    <h5>View Students Result Info</h5>
+                                                <div class="panel-title clearfix">
+                                                    <h5 class="pull-left">View Students Result Info</h5>
+                                                    <div class="pull-right">
+                                                        <?php echo backToDashboardButton(); ?>
+                                                    </div>
                                                 </div>
 <?php if($msg){?>
 <div class="alert alert-success left-icon-alert" role="alert">
