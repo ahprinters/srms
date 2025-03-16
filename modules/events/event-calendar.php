@@ -19,6 +19,7 @@ if(strlen($_SESSION['alogin'])=="") {
         <link rel="stylesheet" href="../../css/lobipanel/lobipanel.min.css" media="screen" >
         <link rel="stylesheet" href="../../css/prism/prism.css" media="screen" >
         <link rel="stylesheet" href="../../css/main.css" media="screen" >
+        <link rel="stylesheet" href="../../css/sidebar.css" media="screen" >
         <!-- FullCalendar CSS -->
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.10.2/fullcalendar.min.css" />
         <script src="../../js/modernizr/modernizr.min.js"></script>
@@ -70,7 +71,7 @@ if(strlen($_SESSION['alogin'])=="") {
             <!-- ========== WRAPPER FOR BOTH SIDEBARS & MAIN CONTENT ========== -->
             <div class="content-wrapper">
                 <div class="content-container">
-                    <?php include('../../includes/leftbar.php');?>
+                    <?php include('../../includes/sidebar.php');?>
                     <!-- /.left-sidebar -->
 
                     <div class="main-page">

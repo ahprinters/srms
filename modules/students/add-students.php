@@ -51,6 +51,7 @@ else{
         <link rel="stylesheet" href="../../css/prism/prism.css" media="screen" >
         <link rel="stylesheet" href="../../css/select2/select2.min.css" >
         <link rel="stylesheet" href="../../css/main.css" media="screen" >
+        <link rel="stylesheet" href="../../css/sidebar.css" media="screen" >
         <script src="../../js/modernizr/modernizr.min.js"></script>
     </head>
     <body class="top-navbar-fixed">
@@ -58,7 +59,7 @@ else{
             <?php include('../../includes/topbar.php');?>
             <div class="content-wrapper">
                 <div class="content-container">
-                    <?php include('../../includes/leftbar.php');?>
+                    <?php include('../../includes/sidebar.php');?>
                     <div class="main-page">
                         <div class="container-fluid">
                             <div class="row page-title-div">
@@ -172,6 +173,8 @@ else{
         <script src="../../js/prism/prism.js"></script>
         <script src="../../js/select2/select2.min.js"></script>
         <script src="../../js/main.js"></script>
+         <!-- Add sidebar specific JS -->
+         <script src="../../js/sidebar.js"></script>
         <script>
             $(function($) {
                 $(".js-states").select2();

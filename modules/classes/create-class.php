@@ -43,6 +43,7 @@ $error="Something went wrong. Please try again";
         <link rel="stylesheet" href="../../css/lobipanel/lobipanel.min.css" media="screen" >
         <link rel="stylesheet" href="../../css/prism/prism.css" media="screen" >
         <link rel="stylesheet" href="../../css/main.css" media="screen" >
+        <link rel="stylesheet" href="../../css/sidebar.css" media="screen" >
         <script src="../../js/modernizr/modernizr.min.js"></script>
          <style>
         .errorWrap {
@@ -74,7 +75,7 @@ $error="Something went wrong. Please try again";
                 <div class="content-container">
 
 <!-- ========== LEFT SIDEBAR ========== -->
-<?php include('../../includes/leftbar.php');?>                   
+<?php include('../../includes/sidebar.php');?>                   
  <!-- /.left-sidebar -->
 
                     <div class="main-page">

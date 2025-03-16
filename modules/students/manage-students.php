@@ -47,6 +47,7 @@ else{
         <link rel="stylesheet" href="../../css/prism/prism.css" media="screen" >
         <link rel="stylesheet" href="../../css/select2/select2.min.css" >
         <link rel="stylesheet" href="../../css/main.css" media="screen" >
+        <link rel="stylesheet" href="../../css/sidebar.css" media="screen" >
         <script src="../../js/modernizr/modernizr.min.js"></script>
     </head>
     <body class="top-navbar-fixed">
@@ -54,7 +55,7 @@ else{
             <?php include('../../includes/topbar.php');?>
             <div class="content-wrapper">
                 <div class="content-container">
-                    <?php include('../../includes/leftbar.php');?>
+                    <?php include('../../includes/sidebar.php');?>
                     <div class="main-page">
                         <div class="container-fluid">
                             <div class="row page-title-div">
@@ -167,6 +168,34 @@ else{
         <script src="../../js/DataTables/jquery.dataTables.min.js"></script>
         <script src="../../js/DataTables/dataTables.bootstrap.min.js"></script>
         <script src="../../js/main.js"></script>
+        
+        <!-- Direct sidebar functionality -->
+        <script>
+            $(document).ready(function() {
+                // Direct sidebar functionality
+                $('.sidebar-menu .has-submenu > a').on('click', function(e) {
+                    e.preventDefault();
+                    var parent = $(this).parent();
+                    parent.toggleClass('open');
+                    
+                    var submenu = $(this).next('.submenu');
+                    if (parent.hasClass('open')) {
+                        submenu.slideDown(300);
+                    } else {
+                        submenu.slideUp(300);
+                    }
+                });
+                
+                // Auto-open current section
+                var currentPath = window.location.pathname;
+                if (currentPath.includes('/students/')) {
+                    var studentsMenu = $('.sidebar-menu li:contains("Students")');
+                    studentsMenu.addClass('open');
+                    studentsMenu.find('.submenu').slideDown(300);
+                }
+            });
+        </script>
+        
         <script>
             $(function($) {
                 $('#example').DataTable();

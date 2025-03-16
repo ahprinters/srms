@@ -1,0 +1,118 @@
+/* Sidebar specific styles */
+.sidebar {
+    background-color: #333;
+    color: #fff;
+    min-height: 100vh;
+    width: 250px;
+    position: fixed;
+    left: 0;
+    top: 0;
+    z-index: 1000;
+    padding-top: 60px; /* Adjust based on your topbar height */
+}
+
+.sidebar-header {
+    padding: 20px 15px;
+    text-align: center;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.sidebar-header h3 {
+    color: #fff;
+    margin: 0;
+}
+
+.collapse-menu {
+    padding: 10px 15px;
+    cursor: pointer;
+    color: #aaa;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    font-size: 14px;
+}
+
+.collapse-menu:hover {
+    color: #fff;
+}
+
+.category-title {
+    padding: 15px 15px 5px;
+    font-size: 12px;
+    text-transform: uppercase;
+    color: #aaa;
+    font-weight: bold;
+}
+
+.sidebar-menu {
+    list-style: none;
+    padding: 0;
+    margin: 0 0 15px 0;
+}
+
+.sidebar-menu li a {
+    display: block;
+    padding: 10px 15px;
+    color: #eee;
+    text-decoration: none;
+    transition: all 0.3s;
+}
+
+.sidebar-menu li a:hover,
+.sidebar-menu li a.active {
+    background-color: rgba(255, 255, 255, 0.1);
+    color: #fff;
+}
+
+.sidebar-menu li a i {
+    margin-right: 10px;
+    width: 20px;
+    text-align: center;
+}
+
+.has-submenu > a {
+    position: relative;
+}
+
+.has-submenu > a:after {
+    content: '\f107';
+    font-family: 'FontAwesome';
+    position: absolute;
+    right: 15px;
+    top: 10px;
+}
+
+.has-submenu.open > a:after {
+    content: '\f106';
+}
+
+.submenu {
+    list-style: none;
+    padding: 0;
+    display: none;
+    background-color: rgba(0, 0, 0, 0.2);
+}
+
+.submenu li a {
+    padding-left: 45px;
+    font-size: 14px;
+}
+
+/* Adjust main content to make room for sidebar */
+.content-wrapper {
+    margin-left: 250px;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .sidebar {
+        left: -250px;
+        transition: all 0.3s;
+    }
+    
+    .sidebar.show {
+        left: 0;
+    }
+    
+    .content-wrapper {
+        margin-left: 0;
+    }
+}

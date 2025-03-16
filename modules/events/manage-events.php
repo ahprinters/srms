@@ -39,7 +39,7 @@ if(strlen($_SESSION['alogin'])=="") {
             <!-- ========== WRAPPER FOR BOTH SIDEBARS & MAIN CONTENT ========== -->
             <div class="content-wrapper">
                 <div class="content-container">
-                    <?php include('../../includes/leftbar.php');?>
+                    <?php include('../../includes/sidebar.php');?>
                     <!-- /.left-sidebar -->
 
                     <div class="main-page">

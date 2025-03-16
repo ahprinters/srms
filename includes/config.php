@@ -6,23 +6,9 @@ define('DB_PASS', '');
 define('DB_NAME', 'srms');
 
 // Base URL configuration
-// Define base URL for the application
+// Add this at the end of your config.php file
 if (!defined('BASE_URL')) {
-    // Determine if we're in a subdirectory
-    $script_name = $_SERVER['SCRIPT_NAME'];
-    $base_dir = dirname($script_name);
-    
-    // If we're in the root directory
-    if ($base_dir == '/' || $base_dir == '\\') {
-        define('BASE_URL', '/');
-    } else {
-        // We're in a subdirectory
-        $base_url = str_replace('\\', '/', $base_dir);
-        if (substr($base_url, -1) != '/') {
-            $base_url .= '/';
-        }
-        define('BASE_URL', $base_url);
-    }
+    define('BASE_URL', 'http://localhost/srms/');
 }
 
 // Helper function to get dashboard URL

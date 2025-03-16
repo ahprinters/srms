@@ -1,40 +1,44 @@
-document.addEventListener('DOMContentLoaded', function() {
+$(document).ready(function() {
     console.log('Sidebar JS loaded');
     
-    // Get all submenu parent items
-    const hasSubmenuItems = document.querySelectorAll('.has-submenu');
-    console.log('Found submenu items:', hasSubmenuItems.length);
-    
-    // Add click event to each submenu parent
-    hasSubmenuItems.forEach(item => {
-        const link = item.querySelector('a');
+    // Toggle submenu
+    $('.sidebar-menu .has-submenu > a').on('click', function(e) {
+        e.preventDefault();
+        console.log('Submenu clicked');
         
-        link.addEventListener('click', function(e) {
-            e.preventDefault();
-            console.log('Submenu clicked:', this.textContent);
-            
-            // Get the submenu
-            const submenu = this.parentNode.querySelector('.submenu');
-            
-            // Toggle submenu display
-            if (submenu) {
-                if (submenu.style.display === 'block') {
-                    submenu.style.display = 'none';
-                    item.classList.remove('active');
-                } else {
-                    submenu.style.display = 'block';
-                    item.classList.add('active');
-                }
-            }
-        });
+        var parent = $(this).parent();
+        parent.toggleClass('open');
+        
+        var submenu = $(this).next('.submenu');
+        if (parent.hasClass('open')) {
+            submenu.slideDown(300);
+        } else {
+            submenu.slideUp(300);
+        }
     });
     
-    // Toggle sidebar if button exists
-    const sidebarToggle = document.getElementById('sidebarToggle');
-    if (sidebarToggle) {
-        sidebarToggle.addEventListener('click', function(e) {
-            e.preventDefault();
-            document.getElementById('wrapper').classList.toggle('toggled');
-        });
-    }
+    // Collapse all menu
+    $('#collapseAll').on('click', function() {
+        $('.has-submenu.open').removeClass('open');
+        $('.submenu').slideUp(300);
+    });
+    
+    // Auto-highlight current page
+    var currentPath = window.location.pathname;
+    console.log('Current path:', currentPath);
+    
+    // Highlight active menu item
+    $('.sidebar-menu a').each(function() {
+        var href = $(this).attr('href');
+        if (href && currentPath.indexOf(href.split('/').pop()) !== -1) {
+            $(this).addClass('active');
+            
+            // If it's in a submenu, open the parent
+            var parentMenu = $(this).closest('.has-submenu');
+            if (parentMenu.length) {
+                parentMenu.addClass('open');
+                parentMenu.find('.submenu').slideDown(300);
+            }
+        }
+    });
 });
