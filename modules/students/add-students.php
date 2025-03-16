@@ -58,7 +58,7 @@ else{
             <?php include('../../includes/topbar.php');?>
             <div class="content-wrapper">
                 <div class="content-container">
-                    <!-- <?php include('../../includes/leftbar.php');?> -->
+                    <?php include('../../includes/leftbar.php');?>
                     <div class="main-page">
                         <div class="container-fluid">
                             <div class="row page-title-div">
@@ -85,7 +85,8 @@ else{
                                                 <div class="panel-title clearfix">
                                                     <h5 class="pull-left">Fill the Student info</h5>
                                                     <div class="pull-right">
-                                                    <?php echo backToDashboardButton('float-right'); ?>                                                    </div>
+                                                        <a href="../../dashboard.php" class="btn btn-success btn-sm"><i class="fa fa-home"></i> Dashboard</a>
+                                                    </div>
                                                 </div>
                                             </div>
                                             <?php if($msg){?>

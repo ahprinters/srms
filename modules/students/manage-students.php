@@ -54,12 +54,15 @@ else{
             <?php include('../../includes/topbar.php');?>
             <div class="content-wrapper">
                 <div class="content-container">
-                    <!-- <?php include('../../includes/leftbar.php');?> -->
+                    <?php include('../../includes/leftbar.php');?>
                     <div class="main-page">
                         <div class="container-fluid">
                             <div class="row page-title-div">
                                 <div class="col-md-6">
                                     <h2 class="title">Manage Students</h2>
+                                </div>
+                                <div class="col-md-6 text-right">
+                                    <a href="add-students.php" class="btn btn-primary btn-sm"><i class="fa fa-plus"></i> Add Student</a>
                                 </div>
                             </div>
                             <div class="row breadcrumb-div">
@@ -78,9 +81,11 @@ else{
                                     <div class="col-md-12">
                                         <div class="panel">
                                             <div class="panel-heading">
-                                                <div class="panel-title d-flex justify-content-between align-items-center">
-                                                    <h5>View Students Info</h5>
-                                                    <?php echo backToDashboardButton('float-right'); ?>
+                                                <div class="panel-title clearfix">
+                                                    <h5 class="pull-left">View Students Info</h5>
+                                                    <div class="pull-right">
+                                                        <a href="../../dashboard.php" class="btn btn-success btn-sm"><i class="fa fa-home"></i> Dashboard</a>
+                                                    </div>
                                                 </div>
                                             </div>
                                             <?php if($msg){?>

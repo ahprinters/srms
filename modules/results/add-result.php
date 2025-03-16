@@ -69,7 +69,7 @@ $error="Something went wrong. Please try again";
             <div class="content-wrapper">
                 <div class="content-container">
                     <!-- ========== LEFT SIDEBAR ========== -->
-                    <!-- <?php include('../../includes/leftbar.php');?> -->
+                    <?php include('../../includes/leftbar.php');?>
                     <!-- /.left-sidebar -->
 
                     <div class="main-page">
